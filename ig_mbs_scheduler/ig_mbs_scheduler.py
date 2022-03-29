@@ -120,42 +120,46 @@ def cli(
         upload_timeout,
         timeout,
     ) as mbs_driver:
-        # Set up post cron schedule
+        # Get latest scheduled post date
         scheduled_post_dates = mbs_driver.get_scheduled_post_dates()
         latest_scheduled_post_date = (
             datetime.now()
             if len(scheduled_post_dates) == 0
             else scheduled_post_dates[-1]
         )
-        next_available_post_date = max(
-            datetime.now() + relativedelta(minutes=21),
-            latest_scheduled_post_date,
-        )
-        post_cron_base_date = next_available_post_date + relativedelta(
-            minutes=post_cron_variability
-        )
-        post_cron_spec.set_current(post_cron_base_date)
 
-        # Set up story cron schedule
+        # Get latest scheduled story date
         scheduled_story_dates = mbs_driver.get_scheduled_story_dates()
         latest_scheduled_story_date = (
             datetime.now()
             if len(scheduled_story_dates) == 0
             else scheduled_story_dates[-1]
         )
-        next_available_story_date = max(
-            datetime.now() + relativedelta(minutes=21),
-            latest_scheduled_story_date,
-        )
-        story_cron_base_date = next_available_story_date + relativedelta(
-            minutes=story_cron_variability
-        )
-        story_cron_spec.set_current(story_cron_base_date)
 
         schedule_count = 0
         retry_count = 0
         while schedule_count < amount if amount else True:
             try:
+                # Update post cron schedule
+                next_available_post_date = max(
+                    datetime.now() + relativedelta(minutes=21),
+                    latest_scheduled_post_date,
+                )
+                post_cron_base_date = next_available_post_date + relativedelta(
+                    minutes=post_cron_variability
+                )
+                post_cron_spec.set_current(post_cron_base_date)
+
+                # Update story cron schedule
+                next_available_story_date = max(
+                    datetime.now() + relativedelta(minutes=21),
+                    latest_scheduled_story_date,
+                )
+                story_cron_base_date = next_available_story_date + relativedelta(
+                    minutes=story_cron_variability
+                )
+                story_cron_spec.set_current(story_cron_base_date)
+
                 # Back up cron iterators, so we can restore in case of error
                 post_cron_spec_backup = deepcopy(post_cron_spec)
                 story_cron_spec_backup = deepcopy(story_cron_spec)

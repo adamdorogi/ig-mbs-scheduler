@@ -128,7 +128,7 @@ def cli(
             else scheduled_post_dates[-1]
         )
         next_available_post_date = max(
-            datetime.now() + relativedelta(minutes=20),
+            datetime.now() + relativedelta(minutes=21),
             latest_scheduled_post_date,
         )
         post_cron_base_date = next_available_post_date + relativedelta(
@@ -144,7 +144,7 @@ def cli(
             else scheduled_story_dates[-1]
         )
         next_available_story_date = max(
-            datetime.now() + relativedelta(minutes=20),
+            datetime.now() + relativedelta(minutes=21),
             latest_scheduled_story_date,
         )
         story_cron_base_date = next_available_story_date + relativedelta(

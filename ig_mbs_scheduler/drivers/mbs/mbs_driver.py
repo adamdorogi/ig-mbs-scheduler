@@ -95,13 +95,17 @@ class MBSWebDriver(BaseWebDriver):
         has_videos = True in is_file_video
 
         # Choose files
-        schedule_add_photo_link = self._driver.find_element(
+        schedule_add_link = self._driver.find_element(
             By.XPATH,
             xpaths.SCHEDULE_ADD_VIDEO_LINK
             if not has_photos or (has_videos and self.prefer_video)
             else xpaths.SCHEDULE_ADD_PHOTO_LINK,
         )
-        schedule_add_photo_link.click()
+        schedule_add_link.click()
+        schedule_upload_from_desktop = self._driver.find_element(
+            By.XPATH, xpaths.SCHEDULE_UPLOAD_FROM_DESKTOP
+        )
+        schedule_upload_from_desktop.click()
         self.__choose_files(media_dir_path)
 
         # Click schedule button
